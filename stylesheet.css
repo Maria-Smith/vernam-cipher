@@ -1,0 +1,88 @@
+#main {
+    max-width: 25em;
+    margin: auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-areas: "key" "txt" "btn" "wrn";
+    grid-gap: 0.5em;
+}
+
+textarea {
+    border: solid rgb(225, 217, 228) 1px
+}
+
+#key {
+    grid-area: key;
+}
+
+#plaintext {
+    grid-area: txt;
+}
+
+#warning {
+    grid-area: wrn;
+}
+
+.btns {
+    grid-area: btn;
+    display: grid;
+    grid-template-areas: "cip cip dec dec . cop";
+    grid-gap: 0.5em;
+}
+
+button:active {
+    background-color: rgb(203, 209, 203);
+}
+
+.btn {
+    padding: 5px;
+    max-width: 10em;
+    min-height: 3em;
+    text-align: right;
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    grid-template-areas: "i t";
+    background-color: white;
+    border: solid rgb(225, 217, 228) 1px;
+}
+
+#cipher {
+    grid-area: cip;
+}
+
+#decipher {
+    grid-area: dec;
+}
+
+#copy {
+    grid-area: cop;
+    justify-self: right;
+}
+
+.icons {
+    height: 50px;
+    width: 50px;
+    display: block;
+    grid-area: i;
+}
+
+.cip {
+    background: url('./icons/cipher.png') no-repeat;
+}
+
+.dec {
+    background: url('./icons/decipher.png') no-repeat;
+}
+
+.cop {
+    background: url('./icons/copy.png') no-repeat;
+}
+
+.txt {
+    grid-area: t;
+    align-self: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+}
