@@ -4,8 +4,20 @@ encodeButton = document.getElementById("cipher");
 decodeButton = document.getElementById("decipher");
 const cyr = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'];
 const lat = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+const punct = ['.', ',', ';', '/', '\\', '?', '!', '-', '(', ')', '[', ']', '"', "#", "$", "%", "^", "&", "*", "@"];
+// TODO: handle white-spaces
 
-// TODO: handle white-spaces and punctuation marks
+function parseText(txt) {
+    txt = txt.toLowerCase().replace(/\s/g,"");
+    punct.forEach(p => {
+        if (txt.includes(p)) {
+            p = p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // escape all special characters (? => \\?)
+            let pReg = new RegExp(p, "g");
+            txt = txt.replace(pReg, "");
+        }
+    });
+    return txt;
+}
 function encode() {
     console.log("encode");
     const keyValue = keyTextbox.value;
@@ -13,7 +25,7 @@ function encode() {
     // console.log(keyValue);
     // console.log(txtValue);
     
-    var txt = txtValue.toLowerCase().replace(/\s/g,""); // parse text
+    var txt = parseText(txtValue); // parse text
     var key = keyValue.toLowerCase();
     var cipher = [];
     var alphabet;
