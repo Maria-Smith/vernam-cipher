@@ -8,7 +8,7 @@ const punct = ['.', ',', ';', '/', '\\', '?', '!', '-', '(', ')', '[', ']', '"',
 // TODO: handle white-spaces
 
 function parseText(txt) {
-    txt = txt.toLowerCase().replace(/\s/g,"");
+    txt = txt.toLowerCase().trim().replace(/\s/g,"ß"); // identifier for whitespaces
     punct.forEach(p => {
         if (txt.includes(p)) {
             p = p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // escape all special characters (? => \\?)
@@ -25,8 +25,8 @@ function encode() {
     // console.log(keyValue);
     // console.log(txtValue);
     
-    var txt = parseText(txtValue); // parse text
-    var key = keyValue.toLowerCase();
+    var txt = parseText(txtValue);
+    var key = parseText(keyValue);
     var cipher = [];
     var alphabet;
     if (key.length < txt.length) {
@@ -38,24 +38,28 @@ function encode() {
         alphabet = cyr;
     }
     for (let i = 0; i < txt.length; i++) {
-        let txtChar = txt.charAt(i);
-        let txtIndex = alphabet.indexOf(txtChar);
-        let keyChar = key.charAt(i);
-        let keyIndex = alphabet.indexOf(keyChar);
-        if (txtIndex === -1 || keyIndex === -1) {
-            console.log("Key and text alphabets don't match.");
-            document.getElementById("warning").textContent = "ОШИБКА СТОП 000 (Key and text alphabets don't match.)";
-            setTimeout(() => {
-                document.getElementById("warning").textContent = "";
-            }, 1500);
-            return false;
+        if (txt.charAt(i) === "ß") { // ignore parsed whitespace identifiers (e.g. helloßworld)
+            cipher.push("ß");
+        } else {
+            let txtChar = txt.charAt(i);
+            let txtIndex = alphabet.indexOf(txtChar);
+            let keyChar = key.charAt(i);
+            let keyIndex = alphabet.indexOf(keyChar);
+            if (txtIndex === -1 || keyIndex === -1) {
+                console.log("Key and text alphabets don't match.");
+                document.getElementById("warning").textContent = "ОШИБКА СТОП 000 (Key and text alphabets don't match.)";
+                setTimeout(() => {
+                    document.getElementById("warning").textContent = "";
+                }, 1500);
+                return false;
+            }
+            let sumIndex = txtIndex + keyIndex;
+            if (sumIndex >= alphabet.length) { // cycle to the beginning when out of range
+                sumIndex -= alphabet.length;
+            }
+            let sumChar = alphabet[sumIndex];
+            cipher.push(sumChar);
         }
-        let sumIndex = txtIndex + keyIndex;
-        if (sumIndex >= alphabet.length) { // cycle to the beginning when out of range
-            sumIndex -= alphabet.length;
-        }
-        let sumChar = alphabet[sumIndex];
-        cipher.push(sumChar);
     }
     cipher = cipher.join('');
     // console.log(cipher);
@@ -68,13 +72,13 @@ function decode() {
     // console.log(key);
     // console.log(cip);
     
-    var cip = cipValue.replace(/\s/g,""); // parse text
-    var key = keyValue.toLowerCase();
+    var cip = parseText(cipValue);
+    var key = parseText(keyValue);
     var plaintext = [];
     var alphabet;
     
     if (key.length < cip.length) {
-        key = key.repeat(Math.ceil(cip.length/key.length)).slice(0, cip.length); // multiply key letters and cut to fit txt length
+        key = key.repeat(Math.ceil(cip.length/key.length)).slice(0, cip.length); // fit key to text length
     }
     if (lat.includes(cip.charAt(0))) { // language check
         alphabet = lat;
@@ -82,24 +86,28 @@ function decode() {
         alphabet = cyr;
     }
     for (let i = 0; i < cip.length; i++) {
-        let cipChar = cip.charAt(i);
-        let cipIndex = alphabet.indexOf(cipChar);
-        let keyChar = key.charAt(i);
-        let keyIndex = alphabet.indexOf(keyChar);
-        if (cipIndex === -1 || keyIndex === -1) {
-            console.log("Key and text alphabets don't match.");
-            document.getElementById("warning").textContent = "ОШИБКА СТОП 000 (Key and text alphabets don't match.)";
-            setTimeout(() => {
-                document.getElementById("warning").textContent = "";
-            }, 1500);
-            return false;
+        if (cip.charAt(i) === "ß") {
+            plaintext.push(" ");
+        } else {
+            let cipChar = cip.charAt(i);
+            let cipIndex = alphabet.indexOf(cipChar);
+            let keyChar = key.charAt(i);
+            let keyIndex = alphabet.indexOf(keyChar);
+            if (cipIndex === -1 || keyIndex === -1) {
+                console.log("Key and text alphabets don't match.");
+                document.getElementById("warning").textContent = "ОШИБКА СТОП 000 (Key and text alphabets don't match.)";
+                setTimeout(() => {
+                    document.getElementById("warning").textContent = "";
+                }, 1500);
+                return false;
+            }
+            let sumIndex = cipIndex - keyIndex;
+            if (sumIndex < 0) { // cycle to the end when out of range
+                sumIndex += alphabet.length;
+            }
+            let sumChar = alphabet[sumIndex];
+            plaintext.push(sumChar);
         }
-        let sumIndex = cipIndex - keyIndex;
-        if (sumIndex < 0) { // cycle to the end when out of range
-            sumIndex += alphabet.length;
-        }
-        let sumChar = alphabet[sumIndex];
-        plaintext.push(sumChar);
     }
     plaintext = plaintext.join('');
     plainTextbox.value = plaintext;
