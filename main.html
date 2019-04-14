@@ -14,7 +14,7 @@
     </h1>
     <div class="grid">
       <textarea rows="1" id="key" placeholder="key"></textarea>
-      <textarea rows="3" id="plaintext" autofocus placeholder="plaintext"></textarea>
+      <textarea rows="3" id="plaintext" placeholder="plaintext" autofocus oninput="validate()"></textarea>
       <div class="btns">
         <button class="btn" id="cipher" onclick="encode()">
           <span class="icons cip"></span>

@@ -5,10 +5,9 @@ decodeButton = document.getElementById("decipher");
 const cyr = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я'];
 const lat = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 const punct = ['.', ',', ';', '/', '\\', '?', '!', '-', '(', ')', '[', ']', '"', "#", "$", "%", "^", "&", "*", "@"];
-// TODO: handle white-spaces
 
 function parseText(txt) {
-    txt = txt.toLowerCase().trim().replace(/\s/g,"ß"); // identifier for whitespaces
+    txt = txt.toLowerCase().trim().replace(/\s/g, "ß"); // identifier for whitespaces
     punct.forEach(p => {
         if (txt.includes(p)) {
             p = p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // escape all special characters (? => \\?)
@@ -27,21 +26,48 @@ function showMessage(msg, type) {
         warning.textContent = "";
     }, 2000);
 }
+function validate() {
+    const keyValue = parseText(keyTextbox.value);
+    const txtValue = parseText(plainTextbox.value);
+    let keyAlphabet;
+    let txtAlphabet;
+    if (lat.includes(keyValue.charAt(0))) {
+        keyAlphabet = lat;
+    } else {
+        keyAlphabet = cyr;
+    }
+    if (lat.includes(txtValue.charAt(0))) {
+        txtAlphabet = lat;
+    } else {
+        txtAlphabet = cyr;
+    }
+    for (const char of keyValue) {
+        if (!keyAlphabet.includes(char)) {
+            showMessage("Mixed key characters.", "error");
+        }
+    }
+    for (const char of txtValue) {
+        if (!txtAlphabet.includes(char)) {
+            showMessage("Mixed text characters.", "error");
+        }
+    }
+    if (keyAlphabet != txtAlphabet) {
+        showMessage("Key and text alphabets don't match.", "error");
+    }
+}
 function encode() {
     console.log("encode");
     const keyValue = keyTextbox.value;
     const txtValue = plainTextbox.value;
-    // console.log(keyValue);
-    // console.log(txtValue);
-    
+
     var txt = parseText(txtValue);
     var key = parseText(keyValue);
     var cipher = [];
     var alphabet;
     if (key.length < txt.length) {
-        key = key.repeat(Math.ceil(txt.length/key.length)).slice(0, txt.length); // multiply key letters and cut to fit txt length
+        key = key.repeat(Math.ceil(txt.length / key.length)).slice(0, txt.length); // fit key to text length
     }
-    if (lat.includes(txt.charAt(0))) { // language check
+    if (lat.includes(txt.charAt(0))) {
         alphabet = lat;
     } else {
         alphabet = cyr;
@@ -67,25 +93,22 @@ function encode() {
         }
     }
     cipher = cipher.join('');
-    // console.log(cipher);
     plainTextbox.value = cipher;
 }
 function decode() {
     console.log("decode");
     const keyValue = keyTextbox.value;
     const cipValue = plainTextbox.value;
-    // console.log(key);
-    // console.log(cip);
-    
+
     var cip = parseText(cipValue);
     var key = parseText(keyValue);
     var plaintext = [];
     var alphabet;
-    
+
     if (key.length < cip.length) {
-        key = key.repeat(Math.ceil(cip.length/key.length)).slice(0, cip.length); // fit key to text length
+        key = key.repeat(Math.ceil(cip.length / key.length)).slice(0, cip.length); // fit key to text length
     }
-    if (lat.includes(cip.charAt(0))) { // language check
+    if (lat.includes(cip.charAt(0))) {
         alphabet = lat;
     } else {
         alphabet = cyr;
@@ -112,7 +135,6 @@ function decode() {
     }
     plaintext = plaintext.join('');
     plainTextbox.value = plaintext;
-    // console.log(plaintext);
 }
 function copyText() {
     console.log("copy");
