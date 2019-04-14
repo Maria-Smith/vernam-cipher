@@ -33,6 +33,11 @@ textarea {
     transition: background-color 0.2s;
     color: white;
 }
+.info {
+    background-color: #6aa84f;
+    transition: background-color 0.2s;
+    color: white;
+}
 
 .btns {
     grid-area: btn;

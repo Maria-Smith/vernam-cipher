@@ -17,11 +17,13 @@ function parseText(txt) {
     });
     return txt;
 }
+timeout = () => {};
 function showMessage(msg, type) {
+    clearTimeout(timeout); // ensure to not start on top of other timeout
     let warning = document.getElementById("warning");
     warning.textContent = msg;
     warning.className = type;
-    setTimeout(() => {
+    timeout = setTimeout(() => {
         warning.className = "";
         warning.textContent = "";
     }, 2000);
@@ -140,8 +142,5 @@ function copyText() {
     console.log("copy");
     plainTextbox.select();
     document.execCommand("copy");
-    document.getElementById("warning").textContent = "copied!";
-    setTimeout(() => {
-        document.getElementById("warning").textContent = "";
-    }, 1500);
+    showMessage("Text copied!", "info")
 }
