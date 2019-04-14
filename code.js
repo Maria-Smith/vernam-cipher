@@ -18,6 +18,15 @@ function parseText(txt) {
     });
     return txt;
 }
+function showMessage(msg, type) {
+    let warning = document.getElementById("warning");
+    warning.textContent = msg;
+    warning.className = type;
+    setTimeout(() => {
+        warning.className = "";
+        warning.textContent = "";
+    }, 2000);
+}
 function encode() {
     console.log("encode");
     const keyValue = keyTextbox.value;
@@ -46,11 +55,7 @@ function encode() {
             let keyChar = key.charAt(i);
             let keyIndex = alphabet.indexOf(keyChar);
             if (txtIndex === -1 || keyIndex === -1) {
-                console.log("Key and text alphabets don't match.");
-                document.getElementById("warning").textContent = "ОШИБКА СТОП 000 (Key and text alphabets don't match.)";
-                setTimeout(() => {
-                    document.getElementById("warning").textContent = "";
-                }, 1500);
+                showMessage("Key and text alphabets don't match.", "error");
                 return false;
             }
             let sumIndex = txtIndex + keyIndex;
@@ -94,11 +99,7 @@ function decode() {
             let keyChar = key.charAt(i);
             let keyIndex = alphabet.indexOf(keyChar);
             if (cipIndex === -1 || keyIndex === -1) {
-                console.log("Key and text alphabets don't match.");
-                document.getElementById("warning").textContent = "ОШИБКА СТОП 000 (Key and text alphabets don't match.)";
-                setTimeout(() => {
-                    document.getElementById("warning").textContent = "";
-                }, 1500);
+                showMessage("Key and text alphabets don't match.", "error");
                 return false;
             }
             let sumIndex = cipIndex - keyIndex;
