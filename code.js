@@ -44,12 +44,12 @@ function validate() {
         txtAlphabet = cyr;
     }
     for (const char of keyValue) {
-        if (!keyAlphabet.includes(char)) {
+        if (!keyAlphabet.includes(char) && char !== "ß") {
             showMessage("Mixed key characters.", "error");
         }
     }
     for (const char of txtValue) {
-        if (!txtAlphabet.includes(char)) {
+        if (!txtAlphabet.includes(char) && char !== "ß") {
             showMessage("Mixed text characters.", "error");
         }
     }
