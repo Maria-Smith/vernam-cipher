@@ -47,10 +47,16 @@ function validate() {
         if (!keyAlphabet.includes(char) && char !== "ß") {
             showMessage("Mixed key characters.", "error");
         }
+        if (!isNaN(parseInt(char, 10))) {
+            showMessage("Cannot encode numbers.", "error")
+        }
     }
     for (const char of txtValue) {
         if (!txtAlphabet.includes(char) && char !== "ß") {
             showMessage("Mixed text characters.", "error");
+        }
+        if (!isNaN(parseInt(char, 10))) {
+            showMessage("Cannot encode numbers.", "error")
         }
     }
     if (keyAlphabet != txtAlphabet) {
@@ -58,7 +64,7 @@ function validate() {
     }
 }
 function encode() {
-    console.log("encode");
+    // console.log("encode");
     const keyValue = keyTextbox.value;
     const txtValue = plainTextbox.value;
 
@@ -98,7 +104,7 @@ function encode() {
     plainTextbox.value = cipher;
 }
 function decode() {
-    console.log("decode");
+    // console.log("decode");
     const keyValue = keyTextbox.value;
     const cipValue = plainTextbox.value;
 
@@ -139,7 +145,7 @@ function decode() {
     plainTextbox.value = plaintext;
 }
 function copyText() {
-    console.log("copy");
+    // console.log("copy");
     plainTextbox.select();
     document.execCommand("copy");
     showMessage("Text copied!", "info")
