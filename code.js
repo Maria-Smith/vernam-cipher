@@ -7,7 +7,6 @@ const lat = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n
 const punct = ['.', ',', ';', '/', '\\', '?', '!', '-', '(', ')', '[', ']', '"', "#", "$", "%", "^", "&", "*", "@"];
 
 function parseText(txt) {
-    txt = txt.toLowerCase().trim().replace(/\s/g, "ß"); // identifier for whitespaces
     punct.forEach(p => {
         if (txt.includes(p)) {
             p = p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // escape all special characters (? => \\?)
@@ -15,6 +14,7 @@ function parseText(txt) {
             txt = txt.replace(pReg, "");
         }
     });
+    txt = txt.toLowerCase().trim().replace(/\s/g, "ß"); // identifier for whitespaces
     return txt;
 }
 timeout = () => {};
